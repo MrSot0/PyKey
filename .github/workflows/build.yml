@@ -24,7 +24,10 @@ jobs:
           pip install pyinstaller
 
       - name: Clean previous builds
-        run: Remove-Item -Recurse -Force dist, build
+        shell: powershell
+        run: |
+          if (Test-Path dist) { Remove-Item -Recurse -Force dist }
+          if (Test-Path build) { Remove-Item -Recurse -Force build }
 
       - name: Build EXE 64-bit
         run: |
@@ -71,7 +74,10 @@ jobs:
           C:\Python311_32\python.exe -m pip install -r requirements.txt pyinstaller
 
       - name: Clean previous builds
-        run: Remove-Item -Recurse -Force dist, build
+        shell: powershell
+        run: |
+          if (Test-Path dist) { Remove-Item -Recurse -Force dist }
+          if (Test-Path build) { Remove-Item -Recurse -Force build }
 
       - name: Build EXE 32-bit
         run: |
