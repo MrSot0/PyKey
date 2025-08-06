@@ -31,8 +31,7 @@ jobs:
 
       - name: Build EXE 64-bit
         run: |
-          pyinstaller --onefile --windowed --icon=assets/icono.ico ^
-            --add-data "assets;assets" --add-data "db;db" --add-data "gui;gui" main.py
+         pyinstaller --onefile --windowed --icon=assets/icono.ico --add-data "assets;assets" --add-data "db;db" --add-data "gui;gui" main.py
 
       - name: Check EXE architecture
         shell: powershell
@@ -58,10 +57,12 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Download and install Python 32-bit
+        shell: powershell
         run: |
           Invoke-WebRequest -Uri https://www.python.org/ftp/python/3.11.5/python-3.11.5.exe -OutFile python32.exe
-          Start-Process -Wait -FilePath python32.exe -ArgumentList '/quiet InstallAllUsers=1 PrependPath=1 Include_pip=1 TargetDir=C:\Python311_32'
-          $env:Path = "C:\Python311_32;$env:Path"
+          Start-Process -Wait -FilePath "$PWD/python32.exe" -ArgumentList '/quiet InstallAllUsers=1 PrependPath=0 Include_pip=1 TargetDir=C:\Python311_32'
+          $env:Path = "C:\Python311_32;C:\Python311_32\Scripts;$env:Path"
+
 
       - name: Verify Python 32-bit
         run: |
@@ -81,8 +82,8 @@ jobs:
 
       - name: Build EXE 32-bit
         run: |
-          C:\Python311_32\Scripts\pyinstaller.exe --onefile --windowed --icon=assets/icono.ico ^
-            --add-data "assets;assets" --add-data "db;db" --add-data "gui;gui" main.py
+         pyinstaller --onefile --windowed --icon=assets/icono.ico --add-data "assets;assets" --add-data "db;db" --add-data "gui;gui" main.py
+
 
       - name: Check EXE architecture
         shell: powershell
