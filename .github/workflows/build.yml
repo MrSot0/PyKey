@@ -25,10 +25,9 @@ jobs:
 
       - name: Build with PyInstaller
         run: pyinstaller --onefile --windowed --icon=assets/icono.ico --add-data "assets;assets" --add-data "db;db" --add-data "gui;gui" main.py
-
       
       - name: Upload EXE as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 
         with:
           name: PyKey
