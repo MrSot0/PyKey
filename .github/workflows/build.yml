@@ -23,9 +23,9 @@ jobs:
           pip install -r requirements.txt
           pip install pyinstaller
           pip install customtkinter
-          pip installcryptography
-          pip installPillow
-          pip installpyperclip
+          pip install cryptography
+          pip install Pillow
+          pip install pyperclip
 
 
       - name: Clean previous builds
@@ -86,9 +86,9 @@ jobs:
           pip install -r requirements.txt 
           pip install pyinstaller
           pip install customtkinter
-          pip installcryptography
-          pip installPillow
-          pip installpyperclip
+          pip install cryptography
+          pip install Pillow
+          pip install pyperclip
           
         shell: bash
   
