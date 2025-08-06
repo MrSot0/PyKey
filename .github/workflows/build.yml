@@ -54,7 +54,7 @@ jobs:
         run: python32/python.exe -m PyInstaller --onefile --windowed --icon=assets/icono.ico --add-data "assets;assets" --add-data "db;db" --add-data "gui;gui" main.py
   
       - name: Upload 32bit EXE
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: PyKey-32bit
           path: dist/main.exe
