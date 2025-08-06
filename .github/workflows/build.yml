@@ -25,12 +25,15 @@ jobs:
       - name: Check EXE architecture
         shell: powershell
         run: |
-          $dumpbin = (Get-Command dumpbin.exe -ErrorAction SilentlyContinue).Source
-          if (-not $dumpbin) {
-              Write-Error "dumpbin.exe no se encontró en el PATH del runner"
-              exit 1
+          $bytes = Get-Content -Path dist/main.exe -Encoding Byte -TotalCount 1024
+          $peOffset = [BitConverter]::ToInt32($bytes[60..63],0)
+          $machine = [BitConverter]::ToUInt16($bytes[$peOffset+4..$peOffset+5],0)
+          switch ($machine) {
+            0x014c { "Arquitectura detectada: 32-bit (x86)" }
+            0x8664 { "Arquitectura detectada: 64-bit (x64)" }
+            default { "Arquitectura desconocida: $machine" }
           }
-          & $dumpbin /headers dist/main.exe | Select-String "machine"
+
 
       - name: Upload 64bit EXE
         uses: actions/upload-artifact@v4
@@ -58,12 +61,16 @@ jobs:
       - name: Check EXE architecture
         shell: powershell
         run: |
-          $dumpbin = (Get-Command dumpbin.exe -ErrorAction SilentlyContinue).Source
-          if (-not $dumpbin) {
-              Write-Error "dumpbin.exe no se encontró en el PATH del runner"
-              exit 1
+          $bytes = Get-Content -Path dist/main.exe -Encoding Byte -TotalCount 1024
+          $peOffset = [BitConverter]::ToInt32($bytes[60..63],0)
+          $machine = [BitConverter]::ToUInt16($bytes[$peOffset+4..$peOffset+5],0)
+          switch ($machine) {
+            0x014c { "Arquitectura detectada: 32-bit (x86)" }
+            0x8664 { "Arquitectura detectada: 64-bit (x64)" }
+            default { "Arquitectura desconocida: $machine" }
           }
-          & $dumpbin /headers dist/main.exe | Select-String "machine"
+
+
 
       - name: Upload 32bit EXE
         uses: actions/upload-artifact@v4
