@@ -37,13 +37,19 @@ jobs:
         shell: powershell
         run: |
           $bytes = Get-Content -Path dist/main.exe -Encoding Byte -TotalCount 1024
-          $peOffset = [BitConverter]::ToInt32($bytes[60..63],0)
-          $machine = [BitConverter]::ToUInt16($bytes[$peOffset+4..$peOffset+5],0)
+          $peOffsetBytes = $bytes[60..63]
+          $peOffset = [BitConverter]::ToInt32($peOffsetBytes, 0)
+      
+          $machineBytes = $bytes[($peOffset + 4)..($peOffset + 5)]
+          $machine = [BitConverter]::ToUInt16($machineBytes, 0)
+      
           switch ($machine) {
             0x014c { Write-Host "Arquitectura detectada: 32-bit (x86)" }
             0x8664 { Write-Host "Arquitectura detectada: 64-bit (x64)" }
             default { Write-Host "Arquitectura desconocida: $machine" }
           }
+
+
 
       - name: Upload 64bit EXE
         uses: actions/upload-artifact@v4
@@ -89,13 +95,18 @@ jobs:
         shell: powershell
         run: |
           $bytes = Get-Content -Path dist/main.exe -Encoding Byte -TotalCount 1024
-          $peOffset = [BitConverter]::ToInt32($bytes[60..63],0)
-          $machine = [BitConverter]::ToUInt16($bytes[$peOffset+4..$peOffset+5],0)
+          $peOffsetBytes = $bytes[60..63]
+          $peOffset = [BitConverter]::ToInt32($peOffsetBytes, 0)
+      
+          $machineBytes = $bytes[($peOffset + 4)..($peOffset + 5)]
+          $machine = [BitConverter]::ToUInt16($machineBytes, 0)
+      
           switch ($machine) {
             0x014c { Write-Host "Arquitectura detectada: 32-bit (x86)" }
             0x8664 { Write-Host "Arquitectura detectada: 64-bit (x64)" }
             default { Write-Host "Arquitectura desconocida: $machine" }
           }
+
 
       - name: Upload 32bit EXE
         uses: actions/upload-artifact@v4
