@@ -22,6 +22,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
+          pip install customtkinter
+          pip installcryptography
+          pip installPillow
+          pip installpyperclip
+
 
       - name: Clean previous builds
         shell: powershell
@@ -78,7 +83,13 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt pyinstaller
+          pip install -r requirements.txt 
+          pip install pyinstaller
+          pip install customtkinter
+          pip installcryptography
+          pip installPillow
+          pip installpyperclip
+          
         shell: bash
   
       - name: Build EXE 32-bit
