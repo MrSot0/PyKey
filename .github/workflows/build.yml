@@ -23,9 +23,14 @@ jobs:
         run: pyinstaller --onefile --windowed --icon=assets/icono.ico --add-data "assets;assets" --add-data "db;db" --add-data "gui;gui" main.py
       
       - name: Check EXE architecture
-        shell: cmd
+        shell: powershell
         run: |
-          "C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.35.32215\bin\Hostx64\x64\dumpbin.exe" /headers dist/main.exe | findstr machine
+          $dumpbin = (Get-Command dumpbin.exe -ErrorAction SilentlyContinue).Source
+          if (-not $dumpbin) {
+              Write-Error "dumpbin.exe no se encontró en el PATH del runner"
+              exit 1
+          }
+          & $dumpbin /headers dist/main.exe | Select-String "machine"
 
       - name: Upload 64bit EXE
         uses: actions/upload-artifact@v4
@@ -49,10 +54,16 @@ jobs:
       - name: Build EXE 32-bit
         run: |
           pyinstaller --onefile --windowed --icon=assets/icono.ico --add-data "assets;assets" --add-data "db;db" --add-data "gui;gui" main.py
+
       - name: Check EXE architecture
-        shell: cmd
+        shell: powershell
         run: |
-          "C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.35.32215\bin\Hostx64\x64\dumpbin.exe" /headers dist/main.exe | findstr machine
+          $dumpbin = (Get-Command dumpbin.exe -ErrorAction SilentlyContinue).Source
+          if (-not $dumpbin) {
+              Write-Error "dumpbin.exe no se encontró en el PATH del runner"
+              exit 1
+          }
+          & $dumpbin /headers dist/main.exe | Select-String "machine"
 
       - name: Upload 32bit EXE
         uses: actions/upload-artifact@v4
