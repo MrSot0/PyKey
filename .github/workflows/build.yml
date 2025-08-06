@@ -31,30 +31,21 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-  
-      - name: Descargar e instalar Python 32 bits (embedded)
+      - name: Install Python 32-bit
         run: |
-          Invoke-WebRequest -Uri https://www.python.org/ftp/python/3.11.5/python-3.11.5-embed-win32.zip -OutFile python32.zip
-          Expand-Archive python32.zip python32
-  
-      - name: Agregar python32 a PATH
-        run: echo "${{ github.workspace }}/python32" >> $GITHUB_PATH
-  
-      - name: Instalar pip manualmente
+          Invoke-WebRequest -Uri https://www.python.org/ftp/python/3.11.5/python-3.11.5.exe -OutFile python32.exe
+          Start-Process -Wait -FilePath python32.exe -ArgumentList '/quiet InstallAllUsers=1 PrependPath=1 Include_pip=1'
+      - name: Setup Python 32-bit
         run: |
-          curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-          python32/python.exe get-pip.py
-  
-      - name: Instalar dependencias 32bit
-        run: |
-          python32/python.exe -m pip install --upgrade pip
-          python32/python.exe -m pip install -r requirements.txt pyinstaller
-  
+          python --version
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
       - name: Build EXE 32-bit
-        run: python32/python.exe -m PyInstaller --onefile --windowed --icon=assets/icono.ico --add-data "assets;assets" --add-data "db;db" --add-data "gui;gui" main.py
-  
+        run: |
+          pyinstaller --onefile --windowed --icon=assets/icono.ico --add-data "assets;assets" --add-data "db;db" --add-data "gui;gui" main.py
       - name: Upload 32bit EXE
         uses: actions/upload-artifact@v4
         with:
           name: PyKey-32bit
           path: dist/main.exe
+  
